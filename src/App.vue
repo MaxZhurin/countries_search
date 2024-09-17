@@ -46,7 +46,7 @@ onMounted(rootStore.getAllCountries);
         <h2>Settings:</h2>
         <div class="settings">
           <div class="item double">
-            <label for="country">country:</label>
+            <label for="country">Capital:</label>
             <select name="country" id="country" v-model="country">
               <option value="null">Please select a country</option>
               <option v-for="item in countries" :key="item.flag" :value="item">
@@ -97,7 +97,7 @@ onMounted(rootStore.getAllCountries);
             </li>
           </TransitionGroup>
           
-          <p v-else>Countries not found!</p>
+          <p v-else>Capitals not found!</p>
         </div>
       </section>
     </main>
