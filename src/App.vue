@@ -92,6 +92,7 @@ onMounted(rootStore.getAllCountries);
           >
             <li
               v-for="({ capital, name, distance }, index) in filteredCountries"
+              :key="capital"
             >
               {{ capital?.[0] }}<span v-if="capital?.[0]">,</span> {{ name.common }} ({{ distance }}km)
             </li>
