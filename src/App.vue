@@ -10,21 +10,21 @@ import rootService from "@/services/root";
 const rootStore = useRootStore();
 const { countries, countriesLoading } = storeToRefs(rootStore);
 
-const capital = ref(null);
+const country = ref(null);
 const distance = ref(2500);
 const filteredCountries = ref([]);
 
 const getFilteredCountries = () => {
   const res = [];
 
-  if (capital.value) {
-    countries.value.forEach((country) => {
-      if (capital.value.region !== country.region) return;
-      const distanceBetween = getDistance(capital.value.latlng, country.latlng);
+  if (country.value) {
+    countries.value.forEach((item) => {
+      if (country.value.region !== item.region) return;
+      const distanceBetween = getDistance(country.value.capitalInfo.latlng, item.capitalInfo.latlng);
       if (distanceBetween > distance.value) return;
-      if (capital.value.flag === country.flag) return;
+      if (country.value.flag === item.flag) return;
 
-      res.push({ ...country, distance: distanceBetween.toFixed() });
+      res.push({ ...item, distance: distanceBetween.toFixed() });
     });
   }
 
@@ -33,7 +33,7 @@ const getFilteredCountries = () => {
 
 const debouncedGetFilteredCountries = debounce(getFilteredCountries, 300);
 
-watch([distance, capital], debouncedGetFilteredCountries);
+watch([distance, country], debouncedGetFilteredCountries);
 
 onMounted(rootStore.getAllCountries);
 </script>
@@ -46,9 +46,9 @@ onMounted(rootStore.getAllCountries);
         <h2>Settings:</h2>
         <div class="settings">
           <div class="item double">
-            <label for="capital">Capital:</label>
-            <select name="capital" id="capital" v-model="capital">
-              <option value="null">Please select a capital</option>
+            <label for="country">country:</label>
+            <select name="country" id="country" v-model="country">
+              <option value="null">Please select a country</option>
               <option v-for="item in countries" :key="item.flag" :value="item">
                 {{ item.capital?.[0] }}<span v-if="item.capital?.[0]">,</span> {{ item.name.common }}
               </option>
