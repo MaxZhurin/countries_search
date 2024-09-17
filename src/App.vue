@@ -20,7 +20,10 @@ const getFilteredCountries = () => {
   if (country.value) {
     countries.value.forEach((item) => {
       if (country.value.region !== item.region) return;
-      const distanceBetween = getDistance(country.value.capitalInfo.latlng, item.capitalInfo.latlng);
+      const distanceBetween = getDistance(
+        country.value.capitalInfo.latlng || country.value.latlng,
+        item.capitalInfo.latlng || item.latlng
+      );
       if (distanceBetween > distance.value) return;
       if (country.value.flag === item.flag) return;
 
@@ -50,7 +53,8 @@ onMounted(rootStore.getAllCountries);
             <select name="country" id="country" v-model="country">
               <option value="null">Please select a country</option>
               <option v-for="item in countries" :key="item.flag" :value="item">
-                {{ item.capital?.[0] }}<span v-if="item.capital?.[0]">,</span> {{ item.name.common }}
+                {{ item.capital?.[0] }}<span v-if="item.capital?.[0]">,</span>
+                {{ item.name.common }}
               </option>
             </select>
           </div>
@@ -85,19 +89,16 @@ onMounted(rootStore.getAllCountries);
       <section>
         <h2>Results:</h2>
         <div id="results">
-          <TransitionGroup
-            v-if="filteredCountries.length > 0"
-            name="list"
-            tag="ol"
-          >
+          <ol v-if="filteredCountries.length > 0">
             <li
-              v-for="({ capital, name, distance }, index) in filteredCountries"
-              :key="capital"
+              v-for="({ capital, flag, name, distance }, index) in filteredCountries"
+              :key="flag"
             >
-              {{ capital?.[0] }}<span v-if="capital?.[0]">,</span> {{ name.common }} ({{ distance }}km)
+              {{ capital?.[0] }}<span v-if="capital?.[0]">,</span>
+              {{ name.common }} ({{ distance }}km)
             </li>
-          </TransitionGroup>
-          
+          </ol>
+
           <p v-else>Capitals not found!</p>
         </div>
       </section>
